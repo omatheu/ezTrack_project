@@ -1,0 +1,61 @@
+# DiagramaSequênciaVisualizarPreçoMédio
+# Iniciação do Diagrama de Sequência
+shape: sequence_diagram
+
+
+# Atores e objetos
+comprador/vendedor: "Comprador/Vendedor" {shape: person}
+pluginMetaMask: "Plugin MetaMask"
+plataformaFrontend: "Plataforma Frontend"
+servidorBackend: "Servidor Backend"
+blockchain: "Blockchain"
+
+
+# Autenticação do usuário
+comprador/vendedor.t1 -> pluginMetaMask: "1.0 AutenticarUsuario()"
+pluginMetaMask.t -> pluginMetaMask.t: "1.1 ValidarUsuario()"
+pluginMetaMask -> comprador/vendedor: "1.2 UsuarioAutenticado" {style.stroke-dash: 5}
+
+
+# Processo de pesquisa de item
+comprador/vendedor -> plataformaFrontend.t2: "2.0 PesquisaItem(item)"
+plataformaFrontend -> servidorBackend.t3: "2.1 VerificaItem(item)"
+servidorBackend -> blockchain.t4: "2.1.1 VerificaExistencia(item)"
+blockchain -> servidorBackend: "2.1.2 Existencia = :bool" {style.stroke-dash: 5}
+
+
+# Mostra preço médio se o item existe
+Verifica existência do item\nse item existe: {
+  servidorBackend -> blockchain: "2.2 SolicitaPreço(item)"
+  blockchain.t4 -> servidorBackend: "2.2.1 RetornaPreço" {style.stroke-dash: 5}
+  servidorBackend.t3 -> plataformaFrontend: "2.2.2 RetornaPreçoMédio" {style.stroke-dash: 5}
+  plataformaFrontend -> comprador/vendedor: "2.4 ExibePrecoMedio" {style.stroke-dash: 5}
+}
+# Se não existe, retorna mensagem
+se item não existe: {
+  servidorBackend.t5 -> plataformaFrontend: "2.3 RetornaNaoExiste" {style.stroke-dash: 5}
+  plataformaFrontend.t2 -> comprador/vendedor.t1: "2.5 MensagemNaoExiste" {style.stroke-dash: 5}
+}
+
+
+# 1.0 - O usuário, para entrar na plataforma, usa o plugin MetaMask para autenticar seu acesso
+# 1.1 - O MetaMask verifica se o usuário tem acesso a plataforma
+# 1.2 - Caso tenha acesso, o usuário é autenticado e pode acessa a plataforma (casos a parte são exibidos no DiagramaSequênciaLoginMetaMask)
+
+
+# 2.0 - O usuário pesquisa o item do qual deseja visualizar o preço médio
+# 2.1 - A plataforma envia o item ao servidor backend para que ele possa verificar sua existência no catálogo atual
+# 2.1.1 - O servidor verifica a existência do item no blockchain
+# 2.1.2 - O blockchain retorna a existência do item ao servidor
+
+
+# Caso o item for existente:
+#   2.2 - O servidor verifica o preço médio do item no blockchain
+#   2.2.1 - O blockchain retorna o preço médio ao servidor
+#   2.2.2 - O servidor envia o preço médio recebido à plataforma
+#   2.4 - O preço médio é exibido ao usuário
+
+
+# Caso o item não existir:
+#   2.3 - O servidor backend retorna à plataforma que o item não existe no catálogo atual
+#   2.5 - É exibida ao usuário uma mensagem dizendo que o item pesquisado não existe no catálogo atual

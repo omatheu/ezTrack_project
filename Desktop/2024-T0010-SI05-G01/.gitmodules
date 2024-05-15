@@ -1,0 +1,6 @@
+[submodule "src/eztrack-env/lib/forge-std"]
+	path = src/eztrack-env/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "src/env/lib/forge-std"]
+	path = src/env/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

@@ -1,0 +1,40 @@
+# DiagramaSequênciaConfirmarVenda
+# Iniciação do Diagrama de Sequência
+shape: sequence_diagram
+
+
+# Atores e objetos
+vendedor: "Vendedor" {shape: person}
+pluginMetaMask: "Plugin MetaMask"
+plataformaFrontend: "Plataforma Frontend"
+servidorBackend: "Servidor Backend"
+blockchain: "Blockchain"
+
+
+# Autenticação do usuário
+vendedor.t1 -> pluginMetaMask.t3: "1.0 AutenticarUsuario()"
+pluginMetaMask -> pluginMetaMask: "1.1 ValidarUsuario()"
+pluginMetaMask.t3 -> vendedor: "1.2 UsuarioAutenticado" {style.stroke-dash: 5}
+
+
+"": {
+  servidorBackend."A solicitação de confirmação do vendedor\n ocorre após uma transação ser registrada pelo\n comprador (DiagramaSequênciaRegistrarCompra)"
+}
+# Processo de confirmação da venda
+servidorBackend.t4 -> plataformaFrontend.t2: "2.0 SolicitaConfirmaçãoVendedor(dados)"
+plataformaFrontend -> vendedor: "2.1 SolicitaConfirmaçãoVenda(dados)"
+vendedor.t1 -> plataformaFrontend: "2.2 btnConfirmaVenda()"
+plataformaFrontend.t2 -> servidorBackend: "2.2.1 VendaConfirmada(transação)"
+servidorBackend.t4 -> blockchain.t5: "2.2.2 RegistraTransação(transação)"
+
+
+# 1.0 - O usuário, para entrar na plataforma, usa o plugin MetaMask para autenticar seu acesso
+# 1.1 - O MetaMask verifica se o usuário tem acesso a plataforma
+# 1.2 - Caso tenha acesso, o usuário é autenticado e pode acessa a plataforma (casos a parte são exibidos no DiagramaSequênciaLoginMetaMask)
+
+
+# 2.0 - O servidor informa a plataforma que uma transação foi registrada pelo comprador e solicita confirmação
+# 2.1 - A plataforma solicita ao vendedor uma confirmação da transação ocorrida
+# 2.2 - O vendedor confirma a venda clicando em um botão "Confirmar Venda"
+# 2.2.1 - O servidor recebe a confirmação
+# 2.2.2 - A transação é registrada no blockchain

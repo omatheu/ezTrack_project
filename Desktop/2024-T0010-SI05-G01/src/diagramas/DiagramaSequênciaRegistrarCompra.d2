@@ -1,0 +1,41 @@
+# DiagramaSequênciaRegistrarCompra
+# Iniciação do Diagrama de Sequência
+shape: sequence_diagram
+
+
+# Atores e objetos
+comprador: "Comprador" {shape: person}
+pluginMetaMask: "Plugin MetaMask"
+plataformaFrontend: "Plataforma Frontend"
+servidorBackend: "Servidor Backend"
+
+
+# Autenticação do usuário
+comprador.t1 -> pluginMetaMask.t3: "1.0 AutenticarUsuario()"
+pluginMetaMask -> pluginMetaMask: "1.1 ValidarUsuario()"
+pluginMetaMask.t3 -> comprador: "1.2 UsuarioAutenticado" {style.stroke-dash: 5}
+
+
+# Processo de registro da transação
+comprador -> plataformaFrontend.t2: "btnRegistrarCompra()"
+plataformaFrontend -> comprador: "FormulárioDadosTransação"
+comprador -> plataformaFrontend: "EnviarFormulário(dados)"
+Será solicitada uma confirmação da parte do vendedor via MetaMask: {
+  plataformaFrontend -> servidorBackend.t4: "SolicitaConfirmaçãoVendedor(dados)"
+
+
+  plataformaFrontend.t2 -> comprador.t1: "msgAguardandoConfirmaçãoVendedor" {style.stroke-dash: 5}
+}
+
+
+# 1.0 - O usuário, para entrar na plataforma, usa o plugin MetaMask para autenticar seu acesso
+# 1.1 - O MetaMask verifica se o usuário tem acesso a plataforma
+# 1.2 - Caso tenha acesso, o usuário é autenticado e pode acessa a plataforma (casos a parte são exibidos no DiagramaSequênciaLoginMetaMask)
+
+
+# 2.0 - O usuário clica em um botão "Registrar Compra" para inserir a transação
+# 2.1 - A plataforma retorna ao usuário um formulário a ser preenchido com os dados da transação
+# dados = (comprador, fornecedor, produto, unidade de medida, quantidade, valor, região, data)
+# 2.2 - O usuário insere os dados e envia o formulário
+# 2.3 - A plataforma informa ao servidor que a transação deve ser confirmada pelo vendedor
+# 2.4 - É exibida uma mensagem ao usuário informando que é aguardada a confirmação do vendedor
