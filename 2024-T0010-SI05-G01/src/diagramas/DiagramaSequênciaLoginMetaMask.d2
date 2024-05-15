@@ -1,0 +1,35 @@
+# DiagramaSequênciaLoginMetaMask
+# Iniciação do Diagrama de Sequência
+shape: sequence_diagram
+
+
+# Atores e objetos
+comprador/vendedor: "Comprador/Vendedor" {shape: person}
+pluginMetaMask: "Plugin MetaMask"
+
+
+# Autenticação do usuário
+comprador/vendedor.t1 -> pluginMetaMask.t3: "1.0 AutenticarUsuario()"
+pluginMetaMask -> pluginMetaMask: "1.1 ValidarUsuario()"
+
+
+# Verifica o acesso
+Verifica autorização de acesso\nse tem acesso: {
+  pluginMetaMask -> comprador/vendedor: "1.2 UsuarioAutenticado" {style.stroke-dash: 5}
+}
+# Se não existe, retorna mensagem
+se não tem acesso: {
+  pluginMetaMask.t3 -> comprador/vendedor.t1: "1.3 UsuarioNãoAutenticado" {style.stroke-dash: 5}
+}
+
+
+# 1.0 - O usuário, para entrar na plataforma, usa o plugin MetaMask para autenticar seu acesso
+# 1.1 - O MetaMask verifica se o usuário tem acesso a plataforma
+
+
+# Caso o usuário tenha acesso:
+#   1.2 - O usuário é autenticado e pode acessa a plataforma
+
+
+# Caso o usuário não tenha acesso:
+#   1.3 - O usuário não é autenticado, pois o acesso é negado

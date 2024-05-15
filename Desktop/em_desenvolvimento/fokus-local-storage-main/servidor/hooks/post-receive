@@ -1,3 +1,0 @@
-#!/bin/sh
-
-git --git-dir="C:\Users\Inteli\Desktop\em_desenvolvimento\fokus-local-storage-main\servidor" --work-tree="C:\Users\Inteli\Desktop\em_desenvolvimento\fokus-local-storage-main\web" checkout -f
